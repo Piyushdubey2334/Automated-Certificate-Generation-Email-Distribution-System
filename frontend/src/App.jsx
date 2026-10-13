@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./pages/LandingPage.jsx";
 import LoginPage from "./components/LoginPage";
 import DashboardOverview from "./pages/DashboardOverview";
 import Header from "./components/Header";
