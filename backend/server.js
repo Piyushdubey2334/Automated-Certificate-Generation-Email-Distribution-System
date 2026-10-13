@@ -10,13 +10,25 @@ const app = express();
 testDB();
 // initDB();
 
+const allowedOrigins = [
+  "http://localhost:5173", // Vite local dev server
+  "http://localhost:3000",
+  "https://automated-certificate-generation-em.vercel.app", // aapka live Vercel URL
+];
+
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5175"],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like Postman or mobile apps)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-  }),
+  })
 );
-
 
 app.use(morgan("dev"));
 app.use(express.json());
