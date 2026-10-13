@@ -23,10 +23,17 @@ const handleLogin = async(e) => {
       setIsAuthenticated(true);
       navigate('/dashboard');
     }
-  } catch(err) {
-    // This catches the CORS error or 401 Unauthorized
+  } catch (err) {
+  console.error("Login Error Details:", err.response?.data || err.message);
+  
+  if (err.response?.data?.message) {
+    setError(err.response.data.message);
+  } else if (err.response?.status === 401) {
+    setError("Invalid email or password.");
+  } else {
     setError("Connection failed. Server might be down or access denied.");
   }
+}
 };
 
   return (
