@@ -16,6 +16,7 @@ const allowedOrigins = [
   "https://automated-certificate-generation-em.vercel.app", // aapka live Vercel URL
 ];
 
+
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -29,6 +30,7 @@ app.use(
     credentials: true,
   })
 );
+app.options("*", cors());
 
 app.use(morgan("dev"));
 app.use(express.json());
