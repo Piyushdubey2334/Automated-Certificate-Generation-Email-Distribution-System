@@ -6,31 +6,27 @@ const routes = require("./src/routes");
 const { errorHandler } = require("./src/middleware/errorMiddleware");
 
 const app = express();
+const cors = require("cors");
 
-// 1. Universal CORS & Preflight Handler
-app.use((req, res, next) => {
-  const allowed = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://automated-certificate-generation-em.vercel.app"
-  ];
-  const origin = req.headers.origin;
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://automated-certificate-generation-em.vercel.app",
+];
 
-  if (allowed.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  } else {
-    res.setHeader("Access-Control-Allow-Origin", "https://automated-certificate-generation-em.vercel.app");
-  }
-
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-  next();
-});
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (!origin || allowedOrigins.includes(origin) || /\.vercel\.app$/.test(origin)) {
+        return cb(null, true);
+      }
+      cb(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  })
+);
 
 // 2. Database test connection
 testDB();
