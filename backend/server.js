@@ -11,16 +11,15 @@ testDB();
 // initDB();
 
 const allowedOrigins = [
-  "http://localhost:5173", // Vite local dev server
+  "http://localhost:5173",
   "http://localhost:3000",
-  "https://automated-certificate-generation-em.vercel.app", // aapka live Vercel URL
+  "https://automated-certificate-generation-em.vercel.app",
 ];
 
-
+// CORS setup
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like Postman or mobile apps)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -30,20 +29,20 @@ app.use(
     credentials: true,
   })
 );
-app.options("*", cors());
+
+// Express v5 / path-to-regexp v8 ke liye options regex ya simple middleware
+app.options(/(.*)/, cors());
 
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  console.log("Serve is Running..");
+  console.log("Server is Running..");
   return res.json({ success: true, message: "Server started successfully" });
 });
 
-
 app.use("/api", routes);
-
 
 app.use(errorHandler);
 
