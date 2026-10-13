@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5007/api", // This matches your backend app.use("/api", ...)
+  baseURL: import.meta.env.VITE_API_URL 
+    ? `${import.meta.env.VITE_API_URL}/api` 
+    : "http://localhost:5007/api",
+  withCredentials: true,
 });
 
 // This automatically attaches your Login Token to every request
